@@ -1,0 +1,8 @@
+{
+  "name": "Momentum Gaming - Esports Production & Management",
+  "description": "A high-performance esports agency website specializing in white-label tournaments, broadcast production, and brand integrations.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
