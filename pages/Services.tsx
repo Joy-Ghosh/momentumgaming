@@ -12,7 +12,7 @@ const Services: React.FC = () => {
     <div className="bg-black min-h-screen">
       <div className="pt-20 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <header className="mb-20">
-          <h1 className="text-6xl md:text-8xl font-black italic text-white uppercase tracking-tighter mb-6">
+          <h1 className="text-5xl md:text-8xl font-black italic text-white uppercase tracking-tighter mb-6">
             Our <span className="text-orange-600">Services</span>
           </h1>
           <p className="text-xl text-zinc-400 max-w-2xl leading-relaxed">
@@ -31,7 +31,7 @@ const Services: React.FC = () => {
                   </div>
                   <h3 className="text-3xl font-black italic text-white uppercase tracking-tighter leading-none">{service.title}</h3>
                 </div>
-                
+
                 <p className="text-lg text-orange-500 font-bold mb-8 italic">
                   "{service.benefit}"
                 </p>
@@ -45,15 +45,15 @@ const Services: React.FC = () => {
                   ))}
                 </div>
 
-                <button className="w-full bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest py-5 px-8 hover:bg-orange-600 hover:border-orange-600 transition-all flex items-center justify-center">
-                  Request Info <ChevronRight size={20} className="ml-2" />
+                <button className="w-full bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest py-5 px-8 hover:bg-orange-600 hover:border-orange-600 transition-all flex items-center justify-center -skew-x-12">
+                  <span className="skew-x-12 flex items-center">Request Info <ChevronRight size={20} className="ml-2" /></span>
                 </button>
               </div>
             );
           })}
         </div>
       </div>
-      
+
       {/* Business Focus Section */}
       <section className="bg-zinc-900 py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

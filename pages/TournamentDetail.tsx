@@ -27,7 +27,7 @@ const TournamentDetail: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 w-full p-8 md:p-16">
           <div className="max-w-7xl mx-auto">
-             <button onClick={() => navigate(-1)} className="flex items-center text-zinc-400 hover:text-white mb-8 transition-colors uppercase font-bold text-xs tracking-widest">
+            <button onClick={() => navigate(-1)} className="flex items-center text-zinc-400 hover:text-white mb-8 transition-colors uppercase font-bold text-xs tracking-widest">
               <ArrowLeft size={16} className="mr-2" /> Back
             </button>
             <div className="inline-block px-4 py-1 bg-orange-600 text-white font-black uppercase text-[10px] tracking-widest mb-6">{tournament.status}</div>
@@ -83,10 +83,10 @@ const TournamentDetail: React.FC = () => {
               <section>
                 <h2 className="text-3xl font-black italic text-white uppercase tracking-tighter mb-8 border-l-4 border-red-600 pl-4">Recap Highlights</h2>
                 <div className="aspect-video bg-zinc-900 border border-white/10 overflow-hidden">
-                  <iframe 
-                    width="100%" 
-                    height="100%" 
-                    src={tournament.highlightVideo} 
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={tournament.highlightVideo}
                     title="Recap Video"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -115,8 +115,8 @@ const TournamentDetail: React.FC = () => {
                 </div>
               </div>
               <div className="mt-12 pt-8 border-t border-white/5">
-                <Link to="/contact" className="block w-full text-center bg-white text-black py-4 font-black uppercase tracking-widest text-sm hover:bg-orange-600 hover:text-white transition-all">
-                  Get Media Kit
+                <Link to="/contact" className="block w-full text-center bg-white text-black py-4 font-black uppercase tracking-widest text-sm hover:bg-orange-600 hover:text-white transition-all -skew-x-12">
+                  <span className="skew-x-12 inline-block">Get Media Kit</span>
                 </Link>
               </div>
             </div>

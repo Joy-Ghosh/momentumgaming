@@ -57,7 +57,7 @@ const CaseStudy: React.FC = () => {
               ))}
             </div>
           </div>
-          
+
           <div className="bg-zinc-950 p-8 border border-white/5 h-fit">
             <h3 className="text-xs font-black uppercase tracking-widest text-zinc-500 mb-8 pb-4 border-b border-white/5">Services Delivered</h3>
             <ul className="space-y-4">
@@ -68,8 +68,8 @@ const CaseStudy: React.FC = () => {
               ))}
             </ul>
             <div className="mt-12 pt-8 border-t border-white/5">
-              <Link to="/contact" className="w-full block bg-orange-600 hover:bg-orange-700 text-white text-center py-4 font-black uppercase tracking-widest text-sm transition-all">
-                Partner with us
+              <Link to="/contact" className="w-full block bg-orange-600 hover:bg-orange-700 text-white text-center py-4 font-black uppercase tracking-widest text-sm transition-all -skew-x-12">
+                <span className="skew-x-12 inline-block">Partner with us</span>
               </Link>
             </div>
           </div>

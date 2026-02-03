@@ -9,7 +9,7 @@ const Tournaments: React.FC = () => {
     <div className="bg-black min-h-screen pb-24">
       <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <header className="mb-20">
-          <h1 className="text-6xl md:text-8xl font-black italic text-white uppercase tracking-tighter mb-6">
+          <h1 className="text-5xl md:text-8xl font-black italic text-white uppercase tracking-tighter mb-6">
             Live <span className="text-orange-600">Events</span>
           </h1>
           <p className="text-xl text-zinc-400 max-w-2xl leading-relaxed">

@@ -9,7 +9,7 @@ const Projects: React.FC = () => {
     <div className="bg-black min-h-screen pb-24">
       <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <header className="mb-20">
-          <h1 className="text-6xl md:text-8xl font-black italic text-white uppercase tracking-tighter mb-6">
+          <h1 className="text-5xl md:text-8xl font-black italic text-white uppercase tracking-tighter mb-6">
             Case <span className="text-blue-500">Studies</span>
           </h1>
           <p className="text-xl text-zinc-400 max-w-2xl leading-relaxed">
@@ -21,9 +21,9 @@ const Projects: React.FC = () => {
           {PROJECTS.map((project, idx) => (
             <div key={project.id} className={`flex flex-col ${idx % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} gap-12 group`}>
               <Link to={`/projects/${project.id}`} className="w-full md:w-3/5 overflow-hidden border border-white/10 relative">
-                <img 
-                  src={project.image} 
-                  alt={project.title} 
+                <img
+                  src={project.image}
+                  alt={project.title}
                   className="w-full aspect-video object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-blue-500/20 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -43,7 +43,7 @@ const Projects: React.FC = () => {
                     </span>
                   ))}
                 </div>
-                <Link 
+                <Link
                   to={`/projects/${project.id}`}
                   className="inline-flex items-center text-white font-black uppercase tracking-widest group-hover:text-blue-500 transition-colors"
                 >

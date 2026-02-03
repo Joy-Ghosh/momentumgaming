@@ -20,7 +20,16 @@ const ScrollToTop = () => {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isScrolled, setIsScrolled] = React.useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -31,7 +40,8 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-black/90 backdrop-blur-md border-b border-white/10 py-2' : 'bg-transparent py-4'
+      }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           <Link to="/" className="flex items-center group">
@@ -39,24 +49,23 @@ const Navbar = () => {
               MOMENTUM<span className="text-orange-500">GAMING</span>
             </span>
           </Link>
-          
+
           <div className="hidden md:flex space-x-8 items-center">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-sm font-bold uppercase tracking-widest transition-colors ${
-                  location.pathname === link.path ? 'text-orange-500' : 'text-gray-400 hover:text-white'
-                }`}
+                className={`text-sm font-bold uppercase tracking-widest transition-colors ${location.pathname === link.path ? 'text-orange-500' : 'text-gray-400 hover:text-white'
+                  }`}
               >
                 {link.name}
               </Link>
             ))}
             <Link
               to="/contact"
-              className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-sm font-bold uppercase tracking-wider text-sm transition-all transform hover:scale-105 active:scale-95"
+              className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-sm font-bold uppercase tracking-wider text-sm transition-all transform hover:scale-105 active:scale-95 -skew-x-12"
             >
-              Partner With Us
+              <span className="skew-x-12 inline-block">Partner With Us</span>
             </Link>
           </div>
 
@@ -113,7 +122,7 @@ const Footer = () => (
             <a href="#" className="p-2 bg-white/5 hover:bg-white/10 text-white rounded-full transition-colors"><Linkedin size={20} /></a>
           </div>
         </div>
-        
+
         <div>
           <h4 className="text-white font-bold uppercase tracking-widest mb-6">Quick Links</h4>
           <ul className="space-y-4">
@@ -131,14 +140,14 @@ const Footer = () => (
               <Mail size={16} className="mr-2" /> hello@momentum.gg
             </li>
             <li className="flex items-center text-gray-400">
-              <Phone size={16} className="mr-2" /> +1 (555) esports
+              <Phone size={16} className="mr-2" /> +91 85096 32411
             </li>
           </ul>
         </div>
       </div>
-      
+
       <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 uppercase tracking-widest font-bold">
-        <p>© 2024 Momentum Gaming Production Ltd. All Rights Reserved.</p>
+        <p>© 2026 Momentum Gaming Production Ltd. All Rights Reserved.</p>
         <div className="flex space-x-6 mt-4 md:mt-0">
           <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
           <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
@@ -148,25 +157,34 @@ const Footer = () => (
   </footer>
 );
 
+const Layout = () => {
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className={`flex-grow ${isHome ? '' : 'pt-28'}`}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<CaseStudy />} />
+          <Route path="/tournaments" element={<Tournaments />} />
+          <Route path="/tournaments/:id" element={<TournamentDetail />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
 export default function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow pt-20">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:id" element={<CaseStudy />} />
-            <Route path="/tournaments" element={<Tournaments />} />
-            <Route path="/tournaments/:id" element={<TournamentDetail />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <Layout />
     </Router>
   );
 }

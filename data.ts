@@ -67,12 +67,12 @@ export const PROJECTS: Project[] = [
 export const TOURNAMENTS: Tournament[] = [
   {
     id: 'summer-showdown',
-    title: 'Summer Showdown 2024',
+    title: 'Summer Showdown 2026',
     status: 'Upcoming',
-    date: 'Aug 15 - Aug 20',
+    date: 'Mar 15 - Mar 20',
     prizePool: '$100,000',
     game: 'Valorant',
-    image: 'https://images.unsplash.com/photo-1560253023-3ee71f219fa0?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1587095951604-b9d924a3fda0?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     summary: 'The biggest regional qualifier for the world stage.',
     format: 'GSL Groups to Single Elimination',
     schedule: [

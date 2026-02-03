@@ -20,7 +20,7 @@ const Contact: React.FC = () => {
     <div className="bg-black min-h-screen">
       <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-24">
         <header className="mb-20 text-center max-w-3xl mx-auto">
-          <h1 className="text-6xl md:text-8xl font-black italic text-white uppercase tracking-tighter mb-6">
+          <h1 className="text-5xl md:text-8xl font-black italic text-white uppercase tracking-tighter mb-6">
             Let's <span className="text-orange-600">Sync</span>
           </h1>
           <p className="text-xl text-zinc-400 leading-relaxed">
@@ -49,7 +49,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-xs font-black uppercase tracking-widest text-zinc-500 mb-1">Call Us</p>
-                    <p className="text-xl font-bold text-white uppercase tracking-tight">+1 (555) MOMENTUM</p>
+                    <p className="text-xl font-bold text-white uppercase tracking-tight">+91 85096 32411</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-6">
@@ -87,7 +87,7 @@ const Contact: React.FC = () => {
                     type="text"
                     required
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors"
                   />
                 </div>
@@ -97,7 +97,7 @@ const Contact: React.FC = () => {
                     type="email"
                     required
                     value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors"
                   />
                 </div>
@@ -110,7 +110,7 @@ const Contact: React.FC = () => {
                     type="text"
                     required
                     value={formData.company}
-                    onChange={(e) => setFormData({...formData, company: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors"
                   />
                 </div>
@@ -118,7 +118,7 @@ const Contact: React.FC = () => {
                   <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Inquiry Type</label>
                   <select
                     value={formData.inquiryType}
-                    onChange={(e) => setFormData({...formData, inquiryType: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, inquiryType: e.target.value })}
                     className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors appearance-none"
                   >
                     <option value="tournament">Tournament Solution</option>
@@ -135,7 +135,7 @@ const Contact: React.FC = () => {
                   rows={4}
                   required
                   value={formData.message}
-                  onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors resize-none"
                   placeholder="Tell us about your goals..."
                 ></textarea>
