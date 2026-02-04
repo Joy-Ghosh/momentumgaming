@@ -1,16 +1,33 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Play, Trophy, Users, Monitor, Zap } from 'lucide-react';
+import { ChevronRight, Play, Trophy, Users, Monitor, Zap, Shield, Tv, Layers } from 'lucide-react';
 import { SERVICES, PROJECTS, TOURNAMENTS } from '../data';
 
 const Home: React.FC = () => {
+  const [scrollY, setScrollY] = React.useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const iconMap: any = {
+    Shield: Shield,
+    Tv: Tv,
+    Users: Users,
+    Layers: Layers
+  };
+
   return (
     <div className="bg-black">
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black z-10" />
+          {/* Subtle radial center darken for text pop */}
+          <div className="absolute inset-0 bg-radial-gradient from-transparent via-transparent to-black/60 z-10" />
           {/* Navbar Gradient Overlay for better text visibility without solid bg */}
           <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/80 to-transparent z-20" />
           <img
@@ -20,7 +37,8 @@ const Home: React.FC = () => {
           />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-30 text-center flex flex-col items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-30 text-center flex flex-col items-center"
+          style={{ transform: `translateY(${scrollY * 0.3}px)` }}>
           <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-sm animate-fade-in-up">
             <Zap size={14} className="text-blue-400 mr-2" />
             <span className="text-xs font-black tracking-widest text-blue-100 uppercase">Next-Gen Production Studio</span>
@@ -32,17 +50,17 @@ const Home: React.FC = () => {
           </h1>
 
           <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 max-w-2xl leading-relaxed animate-fade-in-up delay-200">
-            We create immersive tournament experiences and broadcast solutions for world-class brands. Turning viewers into fans, and games into legends.
+            We create immersive tournaments and broadcasts that make viewers stay, fans cheer, and games legendary
           </p>
 
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 animate-fade-in-up delay-300">
             <Link
               to="/contact"
-              className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 text-white px-10 py-4 font-black uppercase tracking-widest text-lg transition-all flex items-center justify-center transform hover:scale-105 active:scale-95 text-center min-w-[200px] -skew-x-12"
+              className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 text-white px-10 py-4 font-black uppercase tracking-widest text-lg transition-all flex items-center justify-center transform hover:scale-105 active:scale-95 text-center min-w-[200px] -skew-x-12 shimmer-hover relative group"
             >
               <span className="skew-x-12 flex items-center">
                 Work With Us
-                <ChevronRight className="ml-2 w-5 h-5" />
+                <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
             </Link>
             <Link
@@ -77,21 +95,28 @@ const Home: React.FC = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {SERVICES.map((service) => (
-              <div key={service.id} className="group p-8 bg-black border border-white/5 hover:border-orange-600/50 transition-all">
-                <div className="w-12 h-12 bg-white/5 flex items-center justify-center mb-6 group-hover:bg-orange-600 transition-colors">
-                  <Monitor className="text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {SERVICES.map((service) => {
+              const Icon = iconMap[service.icon] || Monitor;
+              return (
+                <div key={service.id} className="group relative p-8 bg-zinc-900/40 backdrop-blur-sm border border-white/5 hover:border-orange-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(234,88,12,0.15)] overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  <div className="relative z-10">
+                    <div className="w-14 h-14 bg-white/5 rounded-sm flex items-center justify-center mb-6 group-hover:bg-orange-600 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                      <Icon className="text-white w-6 h-6" />
+                    </div>
+                    <h3 className="text-xl font-black uppercase text-white mb-3 italic tracking-tight">{service.title}</h3>
+                    <p className="text-gray-400 text-sm leading-relaxed mb-6 group-hover:text-gray-300 transition-colors">
+                      {service.benefit}
+                    </p>
+                    <Link to="/services" className="inline-flex items-center text-xs font-black uppercase tracking-widest text-white/40 group-hover:text-orange-500 transition-colors">
+                      Explore Deliverables <ChevronRight size={14} className="ml-1 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black uppercase text-white mb-4 italic">{service.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                  {service.benefit}
-                </p>
-                <Link to="/services" className="text-xs font-black uppercase tracking-widest text-white/40 group-hover:text-orange-500 transition-colors">
-                  Explore Deliverables +
-                </Link>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -101,12 +126,12 @@ const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { label: 'Live Events', val: '500+' },
-              { label: 'Total Views', val: '250M+' },
-              { label: 'Brands Partnered', val: '40+' },
-              { label: 'Live Broadcast Hours', val: '12k+' }
+              { label: 'Live Events', val: '10+' },
+              { label: 'Total Views', val: '25M+' },
+              { label: 'Brands Partnered', val: '6+' },
+              { label: 'Live Broadcast Hours', val: '32+' }
             ].map((stat, i) => (
-              <div key={i} className="text-center">
+              <div key={i} className="text-center hover:-translate-y-2 transition-transform duration-300">
                 <div className="text-5xl md:text-7xl font-black text-white italic mb-2 tracking-tighter">{stat.val}</div>
                 <div className="text-xs font-bold uppercase tracking-widest text-orange-200">{stat.label}</div>
               </div>
@@ -200,7 +225,7 @@ const Home: React.FC = () => {
         <div className="absolute inset-0 bg-blue-900/20" />
         <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-7xl font-black italic text-white uppercase tracking-tighter leading-tight mb-8">
-            READY TO SCALE YOUR <span className="text-orange-600">ESPORTS</span> VISION?
+            READY TO LEVEL UP YOUR <span className="text-orange-600">NEXT EVENT?</span>
           </h2>
           <p className="text-xl text-zinc-400 mb-12">
             Join the ranks of leading brands trust Momentum Gaming for their production and event needs.
