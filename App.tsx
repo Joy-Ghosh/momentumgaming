@@ -13,12 +13,15 @@ import Dashboard from './pages/admin/Dashboard';
 import Login from './pages/admin/Login';
 import ProjectList from './pages/admin/Projects/ProjectList';
 import ProjectForm from './pages/admin/Projects/ProjectForm';
+import ContactSubmissions from './pages/admin/ContactSubmissions';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+
   return null;
 };
 
@@ -262,6 +265,9 @@ export default function App() {
           <Route path="projects" element={<ProjectList />} />
           <Route path="projects/new" element={<ProjectForm />} />
           <Route path="projects/edit/:id" element={<ProjectForm />} />
+
+          {/* Contact Submissions */}
+          <Route path="contact-submissions" element={<ContactSubmissions />} />
 
           <Route path="tournaments" element={<div className="text-white">Tournaments Coming Soon</div>} />
           <Route path="settings" element={<div className="text-white">Settings Coming Soon</div>} />

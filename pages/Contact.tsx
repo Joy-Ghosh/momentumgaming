@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Download, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Download, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
 
 const WhatsAppIcon = ({ size = 20, className = "" }) => (
@@ -18,9 +19,36 @@ const Contact: React.FC = () => {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Thank you for your inquiry. A Momentum Gaming representative will contact you shortly.');
+    setStatus('submitting');
+
+    try {
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert([{
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          inquiry_type: formData.inquiryType,
+          subject: `${formData.inquiryType} - ${formData.company}`,
+          message: formData.message,
+          status: 'new'
+        }]);
+
+      if (error) throw error;
+
+      setStatus('success');
+      setFormData({ name: '', email: '', company: '', inquiryType: 'tournament', message: '' });
+
+      // Reset status after 5 seconds
+      setTimeout(() => setStatus('idle'), 5000);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setStatus('error');
+    }
   };
 
   return (
@@ -86,75 +114,113 @@ const Contact: React.FC = () => {
           {/* Contact Form */}
           <div className="bg-zinc-950 p-8 md:p-12 border border-white/10">
             <h2 className="text-3xl font-black italic text-white uppercase tracking-tighter mb-10">Direct Inquiry</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Full Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Business Email</label>
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors"
-                  />
-                </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {status === 'success' ? (
+              <div className="text-center py-12 animate-in fade-in slide-in-from-bottom-4">
+                <div className="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle size={32} />
+                </div>
+                <h3 className="text-2xl font-black italic text-white uppercase tracking-tighter mb-2">Message Sent!</h3>
+                <p className="text-zinc-400">Thank you for reaching out. We'll be in touch shortly.</p>
+                <button
+                  onClick={() => setStatus('idle')}
+                  className="mt-8 text-orange-500 text-xs font-bold uppercase tracking-widest"
+                >
+                  Send Another Message
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6 relative">
+                {status === 'error' && (
+                  <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded flex items-center gap-3 text-sm font-bold">
+                    <AlertCircle size={18} />
+                    Something went wrong. Please try again or email us directly.
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Full Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      disabled={status === 'submitting'}
+                      className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors disabled:opacity-50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Business Email</label>
+                    <input
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      disabled={status === 'submitting'}
+                      className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors disabled:opacity-50"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Company Name</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.company}
+                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                      disabled={status === 'submitting'}
+                      className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors disabled:opacity-50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Inquiry Type</label>
+                    <select
+                      value={formData.inquiryType}
+                      onChange={(e) => setFormData({ ...formData, inquiryType: e.target.value })}
+                      disabled={status === 'submitting'}
+                      className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors appearance-none disabled:opacity-50"
+                    >
+                      <option value="tournament">Tournament Solution</option>
+                      <option value="broadcast">Broadcast Production</option>
+                      <option value="brand">Brand Integration</option>
+                      <option value="other">Other / General</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Company Name</label>
-                  <input
-                    type="text"
+                  <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Project Details</label>
+                  <textarea
+                    rows={4}
                     required
-                    value={formData.company}
-                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                    className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors"
-                  />
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    disabled={status === 'submitting'}
+                    className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors resize-none disabled:opacity-50"
+                    placeholder="Tell us about your goals..."
+                  ></textarea>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Inquiry Type</label>
-                  <select
-                    value={formData.inquiryType}
-                    onChange={(e) => setFormData({ ...formData, inquiryType: e.target.value })}
-                    className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors appearance-none"
-                  >
-                    <option value="tournament">Tournament Solution</option>
-                    <option value="broadcast">Broadcast Production</option>
-                    <option value="brand">Brand Integration</option>
-                    <option value="other">Other / General</option>
-                  </select>
-                </div>
-              </div>
 
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Project Details</label>
-                <textarea
-                  rows={4}
-                  required
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full bg-black border border-white/10 p-4 text-white focus:outline-none focus:border-orange-600 transition-colors resize-none"
-                  placeholder="Tell us about your goals..."
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-orange-600 hover:bg-orange-700 text-white p-5 font-black uppercase tracking-widest flex items-center justify-center transition-all transform hover:translate-y-[-2px] active:translate-y-0"
-              >
-                Send Inquiry <Send size={20} className="ml-3" />
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  disabled={status === 'submitting'}
+                  className="w-full bg-orange-600 hover:bg-orange-700 text-white p-5 font-black uppercase tracking-widest flex items-center justify-center transition-all transform hover:translate-y-[-2px] active:translate-y-0 disabled:opacity-70 disabled:translate-y-0"
+                >
+                  {status === 'submitting' ? (
+                    <>
+                      <Loader2 size={20} className="animate-spin mr-3" /> Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Inquiry <Send size={20} className="ml-3" />
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Package, Trophy, Users, TrendingUp } from 'lucide-react';
+import { Package, Trophy, Users, TrendingUp, Mail } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 const StatCard = ({ title, value, icon: Icon, color }: { title: string, value: string, icon: any, color: string }) => (

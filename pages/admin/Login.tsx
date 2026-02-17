@@ -16,23 +16,25 @@ const Login: React.FC = () => {
         setLoading(true);
 
         try {
-            // Check credentials against the custom admins table
-            const { data, error } = await supabase
-                .from('admins')
-                .select('*')
-                .eq('email', email)
-                .eq('password', password) // In a real app, use hashing!
-                .single();
+            // Use Supabase Auth
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
 
-            if (error || !data) {
-                throw new Error('Invalid credentials');
+            if (error) {
+                throw error;
             }
 
-            // Successful login (mock session for now)
-            localStorage.setItem('admin_session', JSON.stringify(data));
+            if (!data.session) {
+                throw new Error('No session created');
+            }
+
+            // Successful login (Supabase handles session storage automatically)
             navigate('/admin-zd');
         } catch (err: any) {
             setError(err.message || 'Failed to login');
+            console.error(err);
         } finally {
             setLoading(false);
         }
