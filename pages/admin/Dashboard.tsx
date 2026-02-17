@@ -16,20 +16,29 @@ const StatCard = ({ title, value, icon: Icon, color }: { title: string, value: s
 
 const Dashboard: React.FC = () => {
     const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking');
+    const [projectCount, setProjectCount] = useState<number | null>(null);
 
     useEffect(() => {
         const checkConnection = async () => {
             try {
-                // Check connection by querying the admins table
+                // Check connection
                 const { error } = await supabase.from('admins').select('*').limit(1);
                 if (error && error.code !== 'PGRST116') {
-                    console.error("Supabase Error:", error);
                     setDbStatus('error');
                 } else {
                     setDbStatus('connected');
                 }
+
+                // Fetch Project Count
+                const { count, error: countError } = await supabase
+                    .from('projects')
+                    .select('*', { count: 'exact', head: true });
+
+                if (!countError) {
+                    setProjectCount(count);
+                }
             } catch (e) {
-                console.error("Connection Error:", e);
+                console.error("Error:", e);
                 setDbStatus('error');
             }
         };
@@ -44,7 +53,12 @@ const Dashboard: React.FC = () => {
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                <StatCard title="Total Projects" value="12" icon={Package} color="text-blue-500" />
+                <StatCard
+                    title="Total Projects"
+                    value={projectCount !== null ? projectCount.toString() : '-'}
+                    icon={Package}
+                    color="text-blue-500"
+                />
                 <StatCard title="Active Tournaments" value="3" icon={Trophy} color="text-orange-500" />
                 <StatCard title="Total Registered" value="1,240" icon={Users} color="text-green-500" />
                 <StatCard title="Monthly Views" value="45.2K" icon={TrendingUp} color="text-purple-500" />
@@ -72,7 +86,7 @@ const Dashboard: React.FC = () => {
                         <div className="flex justify-between items-center bg-zinc-900/50 p-4 rounded border border-white/5">
                             <span className="text-sm font-bold text-zinc-400">Database</span>
                             <span className={`px-2 py-1 text-[10px] font-black uppercase tracking-widest rounded ${dbStatus === 'connected' ? 'bg-green-500/20 text-green-500' :
-                                    dbStatus === 'error' ? 'bg-red-500/20 text-red-500' : 'bg-yellow-500/20 text-yellow-500'
+                                dbStatus === 'error' ? 'bg-red-500/20 text-red-500' : 'bg-yellow-500/20 text-yellow-500'
                                 }`}>
                                 {dbStatus === 'connected' ? 'Operational' : dbStatus === 'error' ? 'Error' : 'Checking...'}
                             </span>
