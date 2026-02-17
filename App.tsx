@@ -1,7 +1,6 @@
-
 import React, { useEffect } from 'react';
-import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronRight, Mail, Phone, Github } from 'lucide-react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, Outlet } from 'react-router-dom';
+import { Menu, X, Mail } from 'lucide-react';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import Projects from './pages/Projects';
@@ -9,6 +8,11 @@ import CaseStudy from './pages/CaseStudy';
 import Tournaments from './pages/Tournaments';
 import TournamentDetail from './pages/TournamentDetail';
 import Contact from './pages/Contact';
+import AdminLayout from './layouts/AdminLayout';
+import Dashboard from './pages/admin/Dashboard';
+import Login from './pages/admin/Login';
+import ProjectList from './pages/admin/Projects/ProjectList';
+import ProjectForm from './pages/admin/Projects/ProjectForm';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -229,7 +233,7 @@ const Footer = () => (
   </footer>
 );
 
-const Layout = () => {
+const PublicLayout = () => {
   const location = useLocation();
   const isHome = location.pathname === '/';
 
@@ -238,15 +242,7 @@ const Layout = () => {
       <CursorGlow />
       <Navbar />
       <main className={`flex-grow ${isHome ? '' : 'pt-28'}`}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/projects/:id" element={<CaseStudy />} />
-          <Route path="/tournaments" element={<Tournaments />} />
-          <Route path="/tournaments/:id" element={<TournamentDetail />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
+        <Outlet />
       </main>
       <Footer />
     </div>
@@ -257,7 +253,30 @@ export default function App() {
   return (
     <Router>
       <ScrollToTop />
-      <Layout />
+      <Routes>
+        <Route path="/admin-zd/login" element={<Login />} />
+        <Route path="/admin-zd" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+
+          {/* Project Management Routes */}
+          <Route path="projects" element={<ProjectList />} />
+          <Route path="projects/new" element={<ProjectForm />} />
+          <Route path="projects/edit/:id" element={<ProjectForm />} />
+
+          <Route path="tournaments" element={<div className="text-white">Tournaments Coming Soon</div>} />
+          <Route path="settings" element={<div className="text-white">Settings Coming Soon</div>} />
+        </Route>
+
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<CaseStudy />} />
+          <Route path="/tournaments" element={<Tournaments />} />
+          <Route path="/tournaments/:id" element={<TournamentDetail />} />
+          <Route path="/contact" element={<Contact />} />
+        </Route>
+      </Routes>
     </Router>
   );
 }
