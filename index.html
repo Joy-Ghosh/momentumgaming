@@ -9,16 +9,53 @@
     content="The future of esports event production. Momentum Gaming builds legendary tournaments, broadcast-quality streams, and brand partnerships that make the gaming world move.">
   <link rel="icon" type="image/png" href="/images/Momemtum Gaming - Icon - Inverted.png">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            orange: {
+              400: '#ff8c42', // Cinematic Copper
+              500: '#e86a17', // Cinematic Amber
+              600: '#bf520b', // Deep rust
+            },
+            blue: {
+              400: '#42caed', // Cyan/Teal
+              500: '#179ebf',
+              600: '#0a7a96',
+            },
+            red: {
+              500: '#d92b3a', // Moody Crimson
+              600: '#a61b27',
+            },
+            zinc: {
+              800: '#1b1d22',
+              900: '#111216',
+              950: '#090a0d', // Cooler, cinematic darks
+            },
+            black: '#040507', // Very dark teal-tinted black for cinematic shadows
+          },
+          backgroundImage: {
+            'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+          }
+        }
+      }
+    }
+  </script>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap"
     rel="stylesheet">
   <link href="https://db.onlinewebfonts.com/c/49fdec8ee8568aaf58534b3ede38e294?family=Industry-Bold" rel="stylesheet">
   <style>
     :root {
-      --orange: #ea580c;
-      --orange-light: #fb923c;
-      --blue: #3b82f6;
-      --black: #050505;
+      --orange: #e86a17;
+      /* Cinematic Amber */
+      --orange-light: #ff8c42;
+      /* Cinematic Copper */
+      --blue: #179ebf;
+      /* Cinematic Teal */
+      --black: #040507;
+      /* Cinematic moody black */
     }
 
     * {

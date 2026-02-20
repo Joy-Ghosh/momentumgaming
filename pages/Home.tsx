@@ -4,7 +4,8 @@ import {
   ChevronRight, Play, Trophy, Users, Monitor, Zap,
   Shield, Tv, Layers, ArrowRight
 } from 'lucide-react';
-import { SERVICES, PROJECTS, TOURNAMENTS } from '../data';
+import { SERVICES, TOURNAMENTS } from '../data';
+import { supabase } from '../lib/supabase';
 
 /* ─── Typewriter hook ─── */
 const phrases = ['We Build Legends.', 'We Create Moments.', 'We Are The Energy.', 'We Define Esports.'];
@@ -174,9 +175,22 @@ const StatItem = ({ stat, triggered }: { stat: typeof STATS[0]; triggered: boole
 /* ─── Main Home ─── */
 const Home: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
+  const [projects, setProjects] = useState<any[]>([]);
   const typeText = useTypewriter();
 
   const iconMap: any = { Shield, Tv, Users, Layers };
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const { data } = await supabase
+        .from('projects')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(4);
+      if (data) setProjects(data);
+    };
+    fetchProjects();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -193,7 +207,7 @@ const Home: React.FC = () => {
     );
     els.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
-  }, []);
+  }, [projects]);
 
   const particles = Array.from({ length: 12 }, (_, i) => ({
     style: {
@@ -208,16 +222,24 @@ const Home: React.FC = () => {
     <div className="bg-black overflow-x-hidden">
 
       {/* ── Hero ── */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black z-10" />
-          <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-black/80 to-transparent z-20" />
-          <img
-            src="/images/hero_bg.jpg"
-            alt="Hero Background"
-            className="w-full h-full object-cover animate-slow-zoom"
-            style={{ transform: `scale(1.05) translateY(${scrollY * 0.08}px)` }}
-          />
+      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          {/* Deep ambient background */}
+          <div className="absolute inset-0 bg-black z-0 pointer-events-none" />
+
+          {/* Animated Cinematic Energy Orbs */}
+          <div className="absolute top-[10%] left-[20%] w-[45vw] h-[45vw] bg-orange-600/20 rounded-full blur-[100px] mix-blend-screen orb-drift pointer-events-none z-10" />
+          <div className="absolute top-[20%] right-[15%] w-[35vw] h-[35vw] bg-blue-600/20 rounded-full blur-[100px] mix-blend-screen orb-drift pointer-events-none z-10" style={{ animationDelay: '-4s' }} />
+          <div className="absolute bottom-[-10%] left-[30%] w-[50vw] h-[50vw] bg-teal-800/20 rounded-full blur-[120px] mix-blend-screen orb-drift pointer-events-none z-10" style={{ animationDelay: '-8s' }} />
+
+          {/* Perspective Grid Floor */}
+          <div className="absolute inset-0 z-10 pointer-events-none opacity-40" style={{ perspective: '1000px' }}>
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(23,158,191,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(23,158,191,0.2)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_100%,#000_60%,transparent_100%)]"
+              style={{ transform: `rotateX(75deg) translateY(${scrollY * 0.3}px) scale(3)`, transformOrigin: 'bottom center' }} />
+          </div>
+
+          <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-black to-transparent z-20 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black to-transparent z-20 pointer-events-none" />
         </div>
 
         {/* Floating particles */}
@@ -227,8 +249,10 @@ const Home: React.FC = () => {
 
         <div
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-30 text-center flex flex-col items-center"
-          style={{ transform: `translateY(${scrollY * 0.25}px)` }}
+          style={{ transform: `translateY(${scrollY * 0.15}px)` }}
         >
+          {/* Text backdrop for extreme clarity */}
+          <div className="absolute inset-0 bg-black/40 blur-[50px] -z-10 rounded-[100%] pointer-events-none" />
           <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-orange-500/30 bg-orange-500/8 backdrop-blur-sm animate-fade-in-up mb-6">
             <Zap size={14} className="text-orange-400 mr-2" />
             <span className="text-xs font-black tracking-widest text-orange-100 uppercase">Next-Gen Production Studio</span>
@@ -344,14 +368,14 @@ const Home: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {PROJECTS.map((project, i) => (
-              <div key={project.id} className={`reveal reveal-delay-${i + 1}`}>
+            {projects.map((project, i) => (
+              <div key={project.id} className="animate-fade-in-up opacity-0" style={{ animationDelay: `${i * 0.1}s` }}>
                 <Link
                   to={`/projects/${project.id}`}
                   className="group relative block overflow-hidden aspect-video cursor-pointer border border-white/10 hover:border-orange-500/30 transition-all duration-500"
                 >
                   <img
-                    src={project.image}
+                    src={project.banner_url || "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1200"}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -360,7 +384,9 @@ const Home: React.FC = () => {
                   <div className="absolute inset-0 bg-orange-600/0 group-hover:bg-orange-600/10 transition-all duration-500" />
 
                   <div className="absolute bottom-0 left-0 p-8 w-full">
-                    <span className="text-xs font-black uppercase tracking-widest text-blue-400 mb-2 block">{project.category}</span>
+                    <span className="text-xs font-black uppercase tracking-widest text-blue-400 mb-2 block">
+                      {project.services && project.services.length > 0 ? project.services[0] : 'Featured Project'}
+                    </span>
                     <h3 className="text-3xl font-black italic text-white uppercase tracking-tighter mb-3">{project.title}</h3>
 
                     {/* Results on hover */}
