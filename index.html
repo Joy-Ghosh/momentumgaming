@@ -4,7 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Momentum Gaming | Esports Production</title>
+  <title>Momentum Gaming | Esports Production Studio</title>
+  <meta name="description"
+    content="The future of esports event production. Momentum Gaming builds legendary tournaments, broadcast-quality streams, and brand partnerships that make the gaming world move.">
   <link rel="icon" type="image/png" href="/images/Momemtum Gaming - Icon - Inverted.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link
@@ -12,10 +14,22 @@
     rel="stylesheet">
   <link href="https://db.onlinewebfonts.com/c/49fdec8ee8568aaf58534b3ede38e294?family=Industry-Bold" rel="stylesheet">
   <style>
+    :root {
+      --orange: #ea580c;
+      --orange-light: #fb923c;
+      --blue: #3b82f6;
+      --black: #050505;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #050505;
+      background-color: var(--black);
       color: #ffffff;
+      overflow-x: hidden;
     }
 
     .font-display {
@@ -28,8 +42,9 @@
       font-family: 'Industry-Bold', sans-serif;
     }
 
+    /* ── Scrollbar ── */
     ::-webkit-scrollbar {
-      width: 8px;
+      width: 4px;
     }
 
     ::-webkit-scrollbar-track {
@@ -37,38 +52,251 @@
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #222;
+      background: #333;
       border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: #333;
+      background: var(--orange);
     }
 
-    .neon-border {
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    /* ── Noise texture ── */
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
     }
 
-    .neon-text-orange {
-      text-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+    /* ── Marquee ── */
+    @keyframes marquee-ltr {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
     }
 
-    .animate-float {
-      animation: float 6s ease-in-out infinite;
+    @keyframes marquee-rtl {
+      0% {
+        transform: translateX(-50%);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
     }
 
-    @keyframes float {
+    .marquee-track-ltr {
+      display: flex;
+      width: max-content;
+      animation: marquee-ltr 22s linear infinite;
+    }
+
+    .marquee-track-rtl {
+      display: flex;
+      width: max-content;
+      animation: marquee-rtl 28s linear infinite;
+    }
+
+    /* ── Glitch ── */
+    @keyframes glitch-shift {
+
+      0%,
+      90%,
+      100% {
+        transform: none;
+        clip-path: none;
+      }
+
+      92% {
+        transform: skewX(-2deg) translateX(-4px);
+        clip-path: inset(20% 0 60% 0);
+        color: #fb923c;
+      }
+
+      94% {
+        transform: skewX(2deg) translateX(4px);
+        clip-path: inset(60% 0 20% 0);
+        color: #60a5fa;
+      }
+
+      96% {
+        transform: skewX(-1deg) translateX(-2px);
+        clip-path: none;
+      }
+    }
+
+    .glitch-text {
+      position: relative;
+      display: inline-block;
+    }
+
+    .glitch-text:hover {
+      animation: glitch-shift 0.6s steps(1) 0.1s both;
+    }
+
+    /* ── Stagger reveal (IntersectionObserver driven) ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: 0.3s;
+    }
+
+    .reveal-delay-4 {
+      transition-delay: 0.4s;
+    }
+
+    /* ── Clip-path reveal (left sweep) ── */
+    .clip-reveal {
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .clip-reveal.visible {
+      clip-path: inset(0 0% 0 0);
+    }
+
+    /* ── Count-up (trigger class set by JS) ── */
+    .count-up-done {
+      transition: all 0.1s;
+    }
+
+    /* ── Tilt card ── */
+    .tilt-wrap {
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease;
+    }
+
+    /* ── Heartbeat ring on CTA ── */
+    @keyframes ring-pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+
+      100% {
+        transform: scale(1.8);
+        opacity: 0;
+      }
+    }
+
+    .ring-pulse::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border: 2px solid var(--orange);
+      animation: ring-pulse 1.8s ease-out infinite;
+      pointer-events: none;
+    }
+
+    /* ── Live badge pulse ── */
+    @keyframes live-dot {
 
       0%,
       100% {
-        transform: translateY(0);
+        opacity: 1;
+        transform: scale(1);
       }
 
       50% {
-        transform: translateY(-20px);
+        opacity: 0.3;
+        transform: scale(1.5);
       }
     }
 
+    .live-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+      animation: live-dot 1s ease-in-out infinite;
+    }
+
+    /* ── Glow breathe on logo ── */
+    @keyframes logo-breathe {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 0px rgba(234, 88, 12, 0));
+      }
+
+      50% {
+        filter: drop-shadow(0 0 12px rgba(234, 88, 12, 0.6));
+      }
+    }
+
+    .logo-breathe {
+      animation: logo-breathe 3s ease-in-out infinite;
+    }
+
+    /* ── Nav underline grow ── */
+    .nav-link-fancy {
+      position: relative;
+    }
+
+    .nav-link-fancy::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      right: 50%;
+      height: 2px;
+      background: var(--orange);
+      transition: left 0.25s ease, right 0.25s ease;
+    }
+
+    .nav-link-fancy:hover::after,
+    .nav-link-fancy.active::after {
+      left: 0;
+      right: 0;
+    }
+
+    /* ── Gradient mesh CTA bg ── */
+    @keyframes mesh-shift {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .mesh-bg {
+      background: linear-gradient(135deg, #0a0a1a, #1a0a05, #0a0f1a, #1a0a0a, #050a15);
+      background-size: 400% 400%;
+      animation: mesh-shift 12s ease infinite;
+    }
+
+    /* ── Shimmer CTA button ── */
     .shimmer-hover {
       position: relative;
       overflow: hidden;
@@ -91,11 +319,216 @@
       transition: 0.7s ease-in-out;
     }
 
+    /* ── Grid dots bg ── */
     .bg-grid {
       background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
       background-size: 30px 30px;
     }
 
+    /* ── Typewriter cursor ── */
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .typewriter-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1em;
+      background: var(--orange);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: blink 0.85s step-start infinite;
+    }
+
+    /* ── Scan line across stats ── */
+    @keyframes scan {
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(100vw);
+      }
+    }
+
+    .scan-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60px;
+      height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.06), transparent);
+      animation: scan 3.5s linear infinite;
+      pointer-events: none;
+    }
+
+    /* ── Horizontal border grow on tournament row ── */
+    .tourney-row::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      top: auto;
+      width: 3px;
+      height: 0;
+      background: var(--orange);
+      transition: height 0.35s ease;
+    }
+
+    .tourney-row:hover::before {
+      height: 100%;
+      top: 0;
+      bottom: auto;
+    }
+
+    /* ── Floating particles ── */
+    @keyframes particle-float {
+      0% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0.7;
+      }
+
+      33% {
+        transform: translateY(-30px) translateX(10px) scale(0.8);
+      }
+
+      66% {
+        transform: translateY(-10px) translateX(-8px) scale(1.1);
+      }
+
+      100% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0.7;
+      }
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: particle-float var(--dur, 6s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    /* ── Reduced motion overrides ── */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01s !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01s !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+
+      .clip-reveal {
+        clip-path: none;
+      }
+    }
+
+    /* ── Slow zoom for hero bg ── */
+    @keyframes slowZoom {
+      from {
+        transform: scale(1.05);
+      }
+
+      to {
+        transform: scale(1.12);
+      }
+    }
+
+    .animate-slow-zoom {
+      animation: slowZoom 20s ease-in-out infinite alternate;
+    }
+
+    /* ── Fade in up ── */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .delay-100 {
+      animation-delay: 0.1s;
+      opacity: 0;
+    }
+
+    .delay-200 {
+      animation-delay: 0.2s;
+      opacity: 0;
+    }
+
+    .delay-300 {
+      animation-delay: 0.3s;
+      opacity: 0;
+    }
+
+    .delay-400 {
+      animation-delay: 0.4s;
+      opacity: 0;
+    }
+
+    .delay-500 {
+      animation-delay: 0.5s;
+      opacity: 0;
+    }
+
+    /* ── Story section orb ── */
+    @keyframes orb-drift {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      33% {
+        transform: translate(30px, -20px) scale(1.05);
+      }
+
+      66% {
+        transform: translate(-20px, 15px) scale(0.95);
+      }
+
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+    }
+
+    .orb-drift {
+      animation: orb-drift 14s ease-in-out infinite;
+    }
+
+    /* ── Neon text ── */
+    .neon-text-orange {
+      text-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+    }
+
+    .neon-border {
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    }
+
+    /* ── Progress bar (unused but kept for backwards compat) ── */
     @keyframes progress {
       from {
         width: 100%;
@@ -106,12 +539,10 @@
       }
     }
   </style>
-  <!-- Importmap removed to prevent conflicts with Vite bundler -->
-
-
 </head>
 
 <body>
+  <div class="noise-overlay" aria-hidden="true"></div>
   <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>

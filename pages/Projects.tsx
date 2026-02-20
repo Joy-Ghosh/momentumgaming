@@ -60,15 +60,15 @@ const Projects: React.FC = () => {
           <div className="grid grid-cols-1 gap-20">
             {projects.map((project, idx) => (
               <div key={project.id} className={`flex flex-col ${idx % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} gap-12 group`}>
-                <Link to={`/projects/${project.id}`} className="w-full md:w-3/5 overflow-hidden border border-white/10 relative">
+                <Link to={`/projects/${project.id}`} className="w-full md:w-3/5 overflow-hidden border border-white/10 relative h-72 md:h-96 block">
                   {project.banner_url ? (
                     <img
                       src={project.banner_url}
                       alt={project.title}
-                      className="w-full aspect-video object-cover group-hover:scale-105 transition-transform duration-700"
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                   ) : (
-                    <div className="w-full aspect-video bg-zinc-900 flex items-center justify-center text-zinc-700 font-bold uppercase tracking-widest">
+                    <div className="absolute inset-0 w-full h-full bg-zinc-900 flex items-center justify-center text-zinc-700 font-bold uppercase tracking-widest">
                       No Image Available
                     </div>
                   )}
